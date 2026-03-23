@@ -1,0 +1,9 @@
+main:
+  - title: "About"
+    url: /about/
+  - title: "CV"
+    url: /files/cv.pdf
+  - title: "GitHub"
+    url: https://github.com/insight88
+  - title: "Publications"
+    url: /publications/
