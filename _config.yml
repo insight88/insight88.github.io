@@ -1,3 +1,7 @@
 theme: jekyll-theme-minimal
+remote_theme: "mmistakes/minimal-mistakes@4.28.0"
 title: Kipyo Kim's homepage
 description: Seoul National University - Brain Cognitive Science Major, MS/Phd integrate course
+url: "https://insight88.github.io"
+plugins:
+  - jekyll-include-cache
