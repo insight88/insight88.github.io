@@ -22,6 +22,7 @@ author_profile: false
 
         {% assign title = book["Title"] | strip %}
         {% assign pubyear = book["Year Published"] | strip %}
+        {% assign author = book["Author"] | strip %}
         {% assign category = book["Bookshelves"] | strip %}
         {% assign isbn13 = book["ISBN13"] | replace: "=", "" | replace: "\"", "" | strip %}
         {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
@@ -62,15 +63,13 @@ author_profile: false
 
           <div class="book-meta">
             <div class="book-title">{{ title }}</div>
-
+          
+            {% if author != "" %}
+              <div class="book-author">{{ author }}</div>
+            {% endif %}
+          
             {% if pubyear != "" %}
               <div class="book-year">{{ pubyear }}</div>
-            {% endif %}
-
-            {% if category != "" %}
-              <div class="book-category">{{ category }}</div>
-            {% else %}
-              <div class="book-category">general</div>
             {% endif %}
           </div>
         </article>
