@@ -1,0 +1,25 @@
+---
+title: "Home"
+layout: single
+author_profile: true
+permalink: /
+---
+
+# Welcome
+
+I am **Kipyo Kim**, a graduate student in **Brain and Cognitive Science(BCS) at Seoul National University(SNU)**.
+
+My research focuses on:
+
+- computational neuroscience
+- multimodal neuroimaging
+- fMRI and EEG analysis
+- topological data analysis (TDA)
+- ML/AI applications for brain
+- computaional modeling of human behavior
+
+I am particularly interested in understanding brain dynamics, individual differences, and clinically relevant computational markers using neuroimaging data.
+
+[About me](/about/){: .btn .btn--primary}
+[GitHub](https://github.com/insight88){: .btn .btn--info}
+[CV](/files/cv.pdf){: .btn .btn--success}
