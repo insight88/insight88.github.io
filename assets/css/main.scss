@@ -4,13 +4,13 @@
 
 @import "minimal-mistakes";
 
-/* reading page only */
+/* Reading page */
 .reading-grid-page {
-  max-width: 100%;
+  width: 100%;
 }
 
 .reading-grid-page .reading-header {
-  margin-bottom: 0.9rem;
+  margin-bottom: 1rem;
 }
 
 .reading-grid-page .reading-header p {
@@ -47,11 +47,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.18s ease;
-}
-
-.reading-grid-page .book-cover-link:hover .book-cover {
-  transform: scale(1.03);
 }
 
 .reading-grid-page .book-meta {
@@ -86,18 +81,17 @@
   word-break: break-word;
 }
 
-/* reading page typography reset */
-.page__content .reading-grid-page h1,
-.page__content .reading-grid-page h2,
-.page__content .reading-grid-page h3,
-.page__content .reading-grid-page p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-/* widen single layout a bit */
+/* make reading page wider */
 .layout--single .page {
   max-width: 1450px;
+}
+
+/* hide the default giant spacing effect */
+.page__content .reading-grid-page p,
+.page__content .reading-grid-page h1,
+.page__content .reading-grid-page h2,
+.page__content .reading-grid-page h3 {
+  margin-top: 0;
 }
 
 /* responsive */

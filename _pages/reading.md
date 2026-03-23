@@ -17,19 +17,19 @@ author_profile: false
 
   <div class="book-grid">
     {% for book in site.data.goodreads %}
-      {% assign shelf = book["Exclusive Shelf"] | downcase %}
+      {% assign shelf = book["Exclusive Shelf"] | downcase | strip %}
       {% if shelf == "read" %}
 
         {% assign title = book["Title"] | strip %}
         {% assign pubyear = book["Year Published"] | strip %}
         {% assign category = book["Bookshelves"] | strip %}
-        {% assign isbn13 = book["ISBN13"] | strip %}
-        {% assign isbn10 = book["ISBN"] | strip %}
+        {% assign isbn13 = book["ISBN13"] | replace: "=", "" | replace: "\"", "" | strip %}
+        {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
 
         {% if isbn13 != "" %}
-          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg?default=false" %}
+          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg" %}
         {% elsif isbn10 != "" %}
-          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg?default=false" %}
+          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg" %}
         {% else %}
           {% assign cover_url = "/assets/images/book-placeholder.png" %}
         {% endif %}
