@@ -1,0 +1,109 @@
+---
+# Only the main Sass file needs front matter
+---
+
+@import "minimal-mistakes";
+
+/* Reading page compact grid */
+.reading-grid-page {
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.reading-grid-page .reading-intro {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.reading-grid-page .book-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem 0.9rem;
+  align-items: start;
+}
+
+.reading-grid-page .book-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  height: 100%;
+}
+
+.reading-grid-page .book-cover-link {
+  display: block;
+  aspect-ratio: 2 / 3;
+  background: #f5f5f5;
+}
+
+.reading-grid-page .book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.reading-grid-page .book-meta {
+  padding: 0.55rem 0.65rem 0.7rem;
+}
+
+.reading-grid-page .book-title {
+  font-size: 0.9rem;
+  line-height: 1.22;
+  margin: 0 0 0.25rem 0;
+  font-weight: 700;
+}
+
+.reading-grid-page .book-author {
+  font-size: 0.78rem;
+  line-height: 1.2;
+  color: #666;
+  margin: 0 0 0.35rem 0;
+}
+
+.reading-grid-page .book-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.reading-grid-page .book-year,
+.reading-grid-page .book-category {
+  font-size: 0.72rem;
+  line-height: 1.15;
+  color: #555;
+  margin: 0;
+}
+
+.reading-grid-page .book-category {
+  word-break: break-word;
+}
+
+/* Reduce default page spacing a bit on this page */
+.page__content .reading-grid-page p,
+.page__content .reading-grid-page h3,
+.page__content .reading-grid-page article {
+  margin-top: 0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .reading-grid-page .book-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .reading-grid-page .book-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .reading-grid-page .book-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
