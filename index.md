@@ -1,11 +1,9 @@
 ---
-title: "Home"
+title: "Kipyo Kim's Homepage"
 layout: single
 author_profile: true
 permalink: /
 ---
-
-# Welcome
 
 I am **Kipyo Kim**, a graduate student in **Brain and Cognitive Science(BCS) at Seoul National University(SNU)**.
 
