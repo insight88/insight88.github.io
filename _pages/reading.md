@@ -25,8 +25,11 @@ author_profile: false
         {% assign category = book["Bookshelves"] | strip %}
         {% assign isbn13 = book["ISBN13"] | replace: "=", "" | replace: "\"", "" | strip %}
         {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
+        {% assign gr_cover = book["Image URL"] | strip %}
 
-        {% if isbn13 != "" %}
+        {% if gr_cover != "" %}
+          {% assign cover_url = gr_cover %}
+        {% elsif isbn13 != "" %}
           {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg" %}
         {% elsif isbn10 != "" %}
           {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg" %}
@@ -43,10 +46,17 @@ author_profile: false
           >
             <img
               class="book-cover"
-              src="{{ cover_url }}"
+              src="{% if cover_url != "" %}{{ cover_url }}{% else %}/assets/images/book-placeholder.png{% endif %}"
               alt="Cover of {{ title | escape }}"
               loading="lazy"
-              onerror="this.onerror=null;this.src='/assets/images/book-placeholder.png';"
+              onerror="
+                this.onerror=null;
+                if (this.src.includes('openlibrary')) {
+                  this.src='https://books.google.com/books/content?vid=ISBN{{ isbn13 | default: isbn10 }}&printsec=frontcover&img=1&zoom=1';
+                } else {
+                  this.src='/assets/images/book-placeholder.png';
+                }
+              "
             >
           </a>
 
