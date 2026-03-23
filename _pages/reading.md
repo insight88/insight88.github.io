@@ -2,64 +2,66 @@
 title: "Reading"
 permalink: /reading/
 layout: single
-author_profile: true
+author_profile: false
 ---
 
-## Reading
-
 <div class="reading-grid-page">
-  <p class="reading-intro">
-    Books I’ve read, synced from my Goodreads export.
-    <a href="https://www.goodreads.com/review/list/132118626-kipyo-kim?ref=nav_mybooks&shelf=read" target="_blank" rel="noopener">
-      View Goodreads
-    </a>
-  </p>
+  <div class="reading-header">
+    <p>
+      A visual bookshelf of books I’ve read.
+      <a href="https://www.goodreads.com/review/list/132118626-kipyo-kim?ref=nav_mybooks&shelf=read" target="_blank" rel="noopener">
+        Goodreads
+      </a>
+    </p>
+  </div>
 
   <div class="book-grid">
     {% for book in site.data.goodreads %}
       {% assign shelf = book["Exclusive Shelf"] | downcase %}
       {% if shelf == "read" %}
-        
-        {% assign isbn13 = book["ISBN13"] | strip %}
-        {% assign isbn10 = book["ISBN"] | strip %}
+
+        {% assign title = book["Title"] | strip %}
         {% assign pubyear = book["Year Published"] | strip %}
         {% assign category = book["Bookshelves"] | strip %}
+        {% assign isbn13 = book["ISBN13"] | strip %}
+        {% assign isbn10 = book["ISBN"] | strip %}
 
         {% if isbn13 != "" %}
-          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-M.jpg?default=false" %}
+          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg?default=false" %}
         {% elsif isbn10 != "" %}
-          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-M.jpg?default=false" %}
+          {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg?default=false" %}
         {% else %}
           {% assign cover_url = "/assets/images/book-placeholder.png" %}
         {% endif %}
 
         <article class="book-card">
-          <a class="book-cover-link"
-             href="https://www.goodreads.com/search?q={{ book["Title"] | uri_escape }}"
-             target="_blank" rel="noopener">
+          <a
+            class="book-cover-link"
+            href="https://www.goodreads.com/search?q={{ title | uri_escape }}"
+            target="_blank"
+            rel="noopener"
+          >
             <img
               class="book-cover"
               src="{{ cover_url }}"
-              alt="Cover of {{ book["Title"] | escape }}"
+              alt="Cover of {{ title | escape }}"
               loading="lazy"
-              onerror="this.onerror=null;this.src='/assets/images/book-placeholder.png';">
+              onerror="this.onerror=null;this.src='/assets/images/book-placeholder.png';"
+            >
           </a>
 
           <div class="book-meta">
-            <h3 class="book-title">{{ book["Title"] }}</h3>
-            <p class="book-author">{{ book["Author"] }}</p>
+            <div class="book-title">{{ title }}</div>
 
-            <div class="book-info-row">
-              {% if pubyear != "" %}
-                <span class="book-year">{{ pubyear }}</span>
-              {% endif %}
+            {% if pubyear != "" %}
+              <div class="book-year">{{ pubyear }}</div>
+            {% endif %}
 
-              {% if category != "" %}
-                <span class="book-category">{{ category }}</span>
-              {% else %}
-                <span class="book-category">general</span>
-              {% endif %}
-            </div>
+            {% if category != "" %}
+              <div class="book-category">{{ category }}</div>
+            {% else %}
+              <div class="book-category">general</div>
+            {% endif %}
           </div>
         </article>
 
