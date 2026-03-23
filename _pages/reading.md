@@ -21,9 +21,10 @@ author_profile: false
       {% if shelf == "read" %}
 
         {% assign title = book["Title"] | strip %}
-        {% assign pubyear = book["Year Published"] | strip %}
+        {% assign pubyear = book["Year Published"] | strip | replace: ".0", "" %}
         {% assign author = book["Author"] | strip %}
         {% assign category = book["Bookshelves"] | strip %}
+        {% assign date_read = book["Date Read"] | strip %}
         {% assign isbn13 = book["ISBN13"] | replace: "=", "" | replace: "\"", "" | strip %}
         {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
         {% assign gr_cover = book["Image URL"] | strip %}
@@ -62,10 +63,15 @@ author_profile: false
           </a>
 
           <div class="book-meta">
+          
             <div class="book-title">{{ title }}</div>
           
             {% if author != "" %}
               <div class="book-author">{{ author }}</div>
+            {% endif %}
+
+            {% if date_read != "" %}
+              <div class="book-date-read">{{ date_read }}</div>
             {% endif %}
           
             {% if pubyear != "" %}
