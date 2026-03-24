@@ -8,7 +8,7 @@ author_profile: false
 A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
 
 <style>
-/* Expand the content area so the page uses the empty right-side space */
+/* Expand page width */
 @media (min-width: 80em) {
   .page {
     width: calc(100% - 220px) !important;
@@ -22,7 +22,7 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
   }
 }
 
-/* Make the reading page use the available width */
+/* Grid */
 .bookshelf-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -43,14 +43,28 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
   text-decoration: none;
 }
 
+.book-cover-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f3f3f3;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
 .book-cover {
   display: block;
   width: 100%;
+  height: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
   background: #f3f3f3;
+  color: transparent;
+}
+
+.book-cover.is-loading {
+  color: transparent;
 }
 
 .book-meta {
@@ -113,6 +127,16 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
     {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
     {% assign gr_cover = book["Image URL"] | strip %}
 
+    {% if gr_cover != "" %}
+      {% assign initial_cover = gr_cover %}
+    {% elsif isbn13 != "" %}
+      {% assign initial_cover = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg?default=false" %}
+    {% elsif isbn10 != "" %}
+      {% assign initial_cover = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg?default=false" %}
+    {% else %}
+      {% assign initial_cover = "/assets/images/book-placeholder.png" %}
+    {% endif %}
+
     <article class="book-card">
       <a
         class="book-cover-link"
@@ -120,19 +144,21 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
         target="_blank"
         rel="noopener"
       >
-        <img
-          class="book-cover js-book-cover"
-          src="{% if gr_cover != '' %}{{ gr_cover }}{% elsif isbn13 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn13 }}-L.jpg?default=false{% elsif isbn10 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn10 }}-L.jpg?default=false{% else %}/assets/images/book-placeholder.png{% endif %}"
-          alt="Cover of {{ title | escape }}"
-          loading="lazy"
-          data-goodreads="{% if gr_cover != '' %}{{ gr_cover }}{% endif %}"
-          data-openlibrary13="{% if isbn13 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn13 }}-L.jpg?default=false{% endif %}"
-          data-openlibrary10="{% if isbn10 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn10 }}-L.jpg?default=false{% endif %}"
-          data-isbn13="{{ isbn13 }}"
-          data-isbn10="{{ isbn10 }}"
-          data-title="{{ title | escape }}"
-          data-author="{{ author | escape }}"
-        >
+        <div class="book-cover-wrap">
+          <img
+            class="book-cover js-book-cover is-loading"
+            src="{{ initial_cover }}"
+            alt="Cover of {{ title | escape }}"
+            loading="lazy"
+            data-goodreads="{% if gr_cover != '' %}{{ gr_cover }}{% endif %}"
+            data-openlibrary13="{% if isbn13 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn13 }}-L.jpg?default=false{% endif %}"
+            data-openlibrary10="{% if isbn10 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn10 }}-L.jpg?default=false{% endif %}"
+            data-isbn13="{{ isbn13 }}"
+            data-isbn10="{{ isbn10 }}"
+            data-title="{{ title | escape }}"
+            data-author="{{ author | escape }}"
+          >
+        </div>
       </a>
 
       <div class="book-meta">
@@ -155,3 +181,144 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
   {% endif %}
 {% endfor %}
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const placeholder = "/assets/images/book-placeholder.png";
+
+  function isProbablyKorean(text) {
+    return /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(text || "");
+  }
+
+  function normalizeThumbUrl(url) {
+    if (!url) return "";
+    return url
+      .replace("http://", "https://")
+      .replace("&edge=curl", "")
+      .replace("zoom=1", "zoom=2");
+  }
+
+  function markLoaded(img) {
+    img.classList.remove("is-loading");
+  }
+
+  async function preload(src) {
+    return new Promise((resolve) => {
+      if (!src) return resolve(false);
+      const test = new Image();
+      test.onload = () => resolve(true);
+      test.onerror = () => resolve(false);
+      test.src = src;
+    });
+  }
+
+  async function fetchGoogleBooksThumbnail(img) {
+    const isbn13 = (img.dataset.isbn13 || "").trim();
+    const isbn10 = (img.dataset.isbn10 || "").trim();
+    const title = (img.dataset.title || "").trim();
+    const author = (img.dataset.author || "").trim();
+
+    const isKo = isProbablyKorean(`${title} ${author}`);
+    const queries = [];
+
+    if (isbn13) queries.push({ q: `isbn:${isbn13}`, lang: "" });
+    if (isbn10) queries.push({ q: `isbn:${isbn10}`, lang: "" });
+
+    if (title && author) {
+      queries.push({
+        q: `intitle:${title} inauthor:${author}`,
+        lang: isKo ? "ko" : ""
+      });
+    }
+
+    if (title) {
+      queries.push({
+        q: `intitle:${title}`,
+        lang: isKo ? "ko" : ""
+      });
+    }
+
+    if (author) {
+      queries.push({
+        q: `inauthor:${author}`,
+        lang: isKo ? "ko" : ""
+      });
+    }
+
+    for (const item of queries) {
+      try {
+        const params = new URLSearchParams({
+          q: item.q,
+          maxResults: "5",
+          printType: "books"
+        });
+
+        if (item.lang) {
+          params.set("langRestrict", item.lang);
+        }
+
+        const url = `https://www.googleapis.com/books/v1/volumes?${params.toString()}`;
+        const res = await fetch(url);
+        if (!res.ok) continue;
+
+        const data = await res.json();
+        const books = data.items || [];
+
+        for (const b of books) {
+          const info = b.volumeInfo || {};
+          const links = info.imageLinks || {};
+
+          const candidates = [
+            links.extraLarge,
+            links.large,
+            links.medium,
+            links.small,
+            links.thumbnail,
+            links.smallThumbnail
+          ].filter(Boolean);
+
+          for (const c of candidates) {
+            const clean = normalizeThumbUrl(c);
+            if (clean && await preload(clean)) {
+              return clean;
+            }
+          }
+        }
+      } catch (e) {
+      }
+    }
+
+    return null;
+  }
+
+  async function attachFallback(img) {
+    const candidates = [
+      img.dataset.goodreads,
+      img.dataset.openlibrary13,
+      img.dataset.openlibrary10
+    ].filter(Boolean);
+
+    for (const src of candidates) {
+      if (await preload(src)) {
+        img.src = src;
+        markLoaded(img);
+        return;
+      }
+    }
+
+    const googleThumb = await fetchGoogleBooksThumbnail(img);
+    if (googleThumb) {
+      img.src = googleThumb;
+      markLoaded(img);
+      return;
+    }
+
+    img.src = placeholder;
+    markLoaded(img);
+  }
+
+  document.querySelectorAll(".js-book-cover").forEach((img) => {
+    attachFallback(img);
+  });
+});
+</script>
