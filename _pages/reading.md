@@ -8,12 +8,28 @@ author_profile: false
 A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
 
 <style>
+/* Expand the content area so the page uses the empty right-side space */
+@media (min-width: 80em) {
+  .page {
+    width: calc(100% - 220px) !important;
+    max-width: 1600px !important;
+    padding-right: 2rem !important;
+  }
+
+  .page__inner-wrap {
+    max-width: 1400px !important;
+    width: 100% !important;
+  }
+}
+
+/* Make the reading page use the available width */
 .bookshelf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 18px 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 18px;
   align-items: start;
-  margin-top: 1.2rem;
+  width: 100%;
+  margin-top: 1.5rem;
 }
 
 .book-card {
@@ -28,48 +44,52 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
 }
 
 .book-cover {
+  display: block;
   width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
   background: #f3f3f3;
 }
 
 .book-meta {
-  margin-top: 8px;
-  line-height: 1.35;
+  margin-top: 10px;
+  line-height: 1.4;
 }
 
 .book-title {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .book-author,
 .book-date-read,
 .book-year {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #666;
   margin-bottom: 2px;
 }
 
-@media (min-width: 1200px) {
+/* Tablet */
+@media (max-width: 1024px) {
   .bookshelf-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
+/* Mobile */
 @media (max-width: 767px) {
   .bookshelf-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 12px;
+    gap: 18px 12px;
   }
 
   .book-title {
-    font-size: 0.86rem;
+    font-size: 0.88rem;
   }
 
   .book-author,
@@ -93,16 +113,6 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
     {% assign isbn10 = book["ISBN"] | replace: "=", "" | replace: "\"", "" | strip %}
     {% assign gr_cover = book["Image URL"] | strip %}
 
-    {% if gr_cover != "" %}
-      {% assign cover_url = gr_cover %}
-    {% elsif isbn13 != "" %}
-      {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn13 | append: "-L.jpg?default=false" %}
-    {% elsif isbn10 != "" %}
-      {% assign cover_url = "https://covers.openlibrary.org/b/isbn/" | append: isbn10 | append: "-L.jpg?default=false" %}
-    {% else %}
-      {% assign cover_url = "/assets/images/book-placeholder.png" %}
-    {% endif %}
-
     <article class="book-card">
       <a
         class="book-cover-link"
@@ -111,18 +121,17 @@ A visual bookshelf of books I’ve read. [Goodreads](https://www.goodreads.com)
         rel="noopener"
       >
         <img
-          class="book-cover"
-          src="{{ cover_url }}"
+          class="book-cover js-book-cover"
+          src="{% if gr_cover != '' %}{{ gr_cover }}{% elsif isbn13 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn13 }}-L.jpg?default=false{% elsif isbn10 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn10 }}-L.jpg?default=false{% else %}/assets/images/book-placeholder.png{% endif %}"
           alt="Cover of {{ title | escape }}"
           loading="lazy"
-          onerror="
-            this.onerror=null;
-            if (this.src.includes('openlibrary')) {
-              this.src='https://books.google.com/books/content?vid=ISBN{{ isbn13 | default: isbn10 }}&printsec=frontcover&img=1&zoom=1';
-            } else {
-              this.src='/assets/images/book-placeholder.png';
-            }
-          "
+          data-goodreads="{% if gr_cover != '' %}{{ gr_cover }}{% endif %}"
+          data-openlibrary13="{% if isbn13 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn13 }}-L.jpg?default=false{% endif %}"
+          data-openlibrary10="{% if isbn10 != '' %}https://covers.openlibrary.org/b/isbn/{{ isbn10 }}-L.jpg?default=false{% endif %}"
+          data-isbn13="{{ isbn13 }}"
+          data-isbn10="{{ isbn10 }}"
+          data-title="{{ title | escape }}"
+          data-author="{{ author | escape }}"
         >
       </a>
 
