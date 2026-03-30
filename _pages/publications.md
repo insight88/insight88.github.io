@@ -7,9 +7,12 @@ author_profile: true
 
 ## Journal Articles
 
-### JY Im, ES Seo, KP Kim, WY Ahn. (2026)
-**A Systematic Review of Interoception in Substance Use Disorder**  
-*Current Addiction Reports*  
+<div class="pub-item">
+  <div class="pub-title">A Systematic Review of Interoception in Substance Use Disorder (2026)</div>
+  <div class="pub-authors">JY Im, ES Seo, KP Kim, WY Ahn.</div>
+  <div class="pub-journal">Current Addiction Reports</div>
+</div>
+
 [Link](https://osf.io/preprints/psyarxiv/n9pq3_v1)
 
 ## Conference Papers

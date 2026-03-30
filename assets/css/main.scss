@@ -125,3 +125,29 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* =========================
+   Publications styling
+   ========================= */
+
+.pub-item {
+  margin-bottom: 1.5rem;
+}
+
+.pub-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.pub-authors {
+  font-size: 1rem;
+  color: #444;
+}
+
+.pub-journal {
+  font-size: 0.9rem;
+  color: #777;
+  font-style: italic;
+}
