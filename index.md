@@ -9,10 +9,10 @@ I am **Kipyo Kim**, a graduate student in **Brain and Cognitive Science(BCS) at 
 
 My research focuses on:
 
-- computational neuroscience
 - multimodal neuroimaging
 - fMRI and EEG analysis
 - topological data analysis (TDA)
+- complex brain dynamics in state space
 - ML/AI applications for brain
 - computaional modeling of human behavior
 
