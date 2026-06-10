@@ -18,6 +18,5 @@ My research focuses on:
 
 I am particularly interested in understanding brain dynamics, individual differences, and clinically relevant computational markers using neuroimaging data.
 
-[About me](/about/){: .btn .btn--primary}
 [GitHub](https://github.com/insight88){: .btn .btn--info}
 [CV](/files/cv.pdf){: .btn .btn--success}

@@ -13,9 +13,9 @@ author_profile: true
   <div class="pub-journal">Current Addiction Reports</div>
 </div>
 
-[Link](https://osf.io/preprints/psyarxiv/n9pq3_v1)
+[Link](https://link.springer.com/article/10.1007/s40429-026-00747-x)
 
-## Conference Papers
+<!-- ## Conference Papers -->
 
 <!-- ### Kim, K., Author, A. (2025)
 **Conference paper title here**  
